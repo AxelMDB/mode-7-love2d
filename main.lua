@@ -29,16 +29,12 @@ VIRTUAL_HEIGHT = 224
 local imageData = love.image.newImageData('F-ZeroMap01MuteCity1.png')
 
 gFont = love.graphics.newFont('font.ttf', 16)
-
-gTransformX = -20
-gTransformY = VIRTUAL_HEIGHT - 10
-gAngle = math.rad(270)
-gSkew = 0
-currentPixel = 0
+gAngle = 0
+gX = 0
 
 function love.load()
   
-    love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setDefaultFilter('linear', 'nearest')
     
     -- initialize our virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -46,8 +42,6 @@ function love.load()
         fullscreen = false,
         resizable = true
     })
-    
-    gPixels = Util.getPixels(imageData, 2396, 437, 100, 190)
 end
 
 function love.resize(w, h)
@@ -55,35 +49,16 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
-      currentPixel = currentPixel + 10
-      gPixels = Util.getPixels(imageData, 2100 + currentPixel, 410, 100, 250)
+    gX = gX + 5
+    gPixels = Util.getPixels(imageData, 200 + gX, 550, 200, 100)
 end
 
 function love.draw()
     push:start()
-    
-    rotationMatrix = Matrix(2,2)
-    rotationMatrix.values[1][1] = math.cos(gAngle)
-    rotationMatrix.values[1][2] = -math.sin(gAngle)
-    rotationMatrix.values[2][1] = math.sin(gAngle)
-    rotationMatrix.values[2][2] = math.cos(gAngle)
-    
-    scaleMatrix = Matrix(2,2)
-    scaleMatrix.values[1][1] = 1
-    scaleMatrix.values[1][2] = 0
-    scaleMatrix.values[2][1] = 0
-    scaleMatrix.values[2][2] = 0.5
-    
-    shearMatrix = Matrix(2,2)
-    shearMatrix.values[1][1] = 1
-    shearMatrix.values[1][2] = 0
-    shearMatrix.values[2][1] = 0.7
-    shearMatrix.values[2][2] = 1
-    
-    transformMatrix = Matrix.Multiply(scaleMatrix, rotationMatrix)
-    transformMatrix = Matrix.Multiply(transformMatrix, shearMatrix)
-    
-    Mode7Drawer.render(gPixels, transformMatrix, gTransformX, gTransformY, true)
+
+    Mode7Drawer.render(gPixels, {x = 0, y = VIRTUAL_HEIGHT / 2 - 50}, 
+        {x = 1.75, y = 1.25}, 
+        {angle = gAngle}, {x = -0.5, y = 0})
     
     love.graphics.setFont(gFont)
     love.graphics.setColor(0, 1, 0, 1)

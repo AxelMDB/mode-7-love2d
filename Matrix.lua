@@ -26,6 +26,7 @@ function Matrix:printAll(xs, ys)
         end
     end
 end
+
 function Matrix.Add(matrix1, matrix2)
     --assert both matrices have the same number of rows
     if matrix1.rows ~= matrix2.rows or matrix1.columns ~= matrix2.columns then return nil end
